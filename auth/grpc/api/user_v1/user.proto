@@ -38,5 +38,4 @@ message User {
 }
 
 message CreateRequest { CreateUserInfo user = 1; }
-
 message CreateResponse { int64 id = 1; }
