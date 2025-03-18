@@ -39,3 +39,15 @@ message User {
 
 message CreateRequest { CreateUserInfo user = 1; }
 message CreateResponse { int64 id = 1; }
+
+message GetRequest { int64 id = 1; }
+message GetResponse { User user = 1; }
+
+message UpdateUserInfo {
+  int64 id = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue email = 3;
+}
+message UpdateRequest { UpdateUserInfo userInfo = 1; }
+
+message DeleteRequest { int64 id = 1; }
