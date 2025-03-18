@@ -1,4 +1,4 @@
-module auth
+module chat-server
 
 go 1.23
 
