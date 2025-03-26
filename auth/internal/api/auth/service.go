@@ -1,0 +1,17 @@
+package auth
+
+import (
+	"auth/internal/service"
+	desc "auth/pkg/user_v1"
+)
+
+type Implementation struct {
+	desc.UnimplementedUserV1Server
+	authService service.AuthService
+}
+
+func NewImplementation(noteService service.AuthService) *Implementation {
+	return &Implementation{
+		authService: noteService,
+	}
+}
