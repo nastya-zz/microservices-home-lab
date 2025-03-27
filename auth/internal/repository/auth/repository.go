@@ -7,7 +7,6 @@ import (
 	"auth/internal/repository/auth/converter"
 	modelRepo "auth/internal/repository/auth/model"
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 	sq "github.com/Masterminds/squirrel"
@@ -56,10 +55,10 @@ func (r repo) Get(ctx context.Context, id int64) (*model.User, error) {
 	}
 
 	var user modelRepo.User
-	err = r.db.DB().ScanOneContext(ctx, user, q, args...)
+	err = r.db.DB().QueryRowContext(ctx, q, args...).Scan(&user.ID, &user.Name, &user.Email, &user.Role, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, fmt.Errorf("cannot get user with id: %d", user.ID)
 		}
 	}
 	return converter.ToUserFromRepo(&user), nil

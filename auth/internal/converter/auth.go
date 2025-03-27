@@ -35,6 +35,7 @@ func ToUserFromService(user *model.User) *desc.User {
 
 	role, _ := strconv.Atoi(user.Role)
 	return &desc.User{
+		Id:        user.ID,
 		Email:     user.Email,
 		Name:      user.Name,
 		Role:      desc.Role(role),
