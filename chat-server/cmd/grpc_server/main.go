@@ -1,7 +1,7 @@
 package main
 
 import (
-	"auth/internal/app"
+	"chat-server/internal/app"
 	"context"
 	"log"
 )

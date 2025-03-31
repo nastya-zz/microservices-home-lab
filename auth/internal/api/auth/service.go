@@ -10,8 +10,8 @@ type Implementation struct {
 	authService service.AuthService
 }
 
-func NewImplementation(noteService service.AuthService) *Implementation {
+func NewImplementation(authService service.AuthService) *Implementation {
 	return &Implementation{
-		authService: noteService,
+		authService: authService,
 	}
 }

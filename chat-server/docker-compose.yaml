@@ -18,7 +18,7 @@ services:
   migrator:
     build:
       context: .
-      dockerfile: migrations.Dockerfile
+      dockerfile: db-migration/migrations.Dockerfile
     restart: on-failure
     environment:
       DB_HOST: pg

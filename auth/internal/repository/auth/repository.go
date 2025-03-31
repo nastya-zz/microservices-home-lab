@@ -36,7 +36,7 @@ func NewRepository(db db.Client) repository.AuthRepository {
 }
 
 func (r repo) Get(ctx context.Context, id int64) (*model.User, error) {
-	const op = "auth.Get"
+	const op = "chat.Get"
 
 	builder := sq.Select(idColumn, nameColumn, emailColumn, roleColumn, createdAtColumn, updatedAtColumn).
 		PlaceholderFormat(sq.Dollar).
@@ -65,7 +65,7 @@ func (r repo) Get(ctx context.Context, id int64) (*model.User, error) {
 }
 
 func (r repo) Create(ctx context.Context, user *model.CreateUser) (int64, error) {
-	const op = "auth.Create"
+	const op = "chat.Create"
 
 	builder := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
@@ -95,7 +95,7 @@ func (r repo) Create(ctx context.Context, user *model.CreateUser) (int64, error)
 }
 
 func (r repo) Update(ctx context.Context, updateUser *model.UpdateUser) error {
-	const op = "auth.Update"
+	const op = "chat.Update"
 	log.Printf("updating user %+v", updateUser)
 
 	builder := sq.Update(tableName).
@@ -137,7 +137,7 @@ func (r repo) Update(ctx context.Context, updateUser *model.UpdateUser) error {
 }
 
 func (r repo) Delete(ctx context.Context, id int64) error {
-	const op = "auth.Delete"
+	const op = "chat.Delete"
 
 	builder := sq.Delete(tableName).PlaceholderFormat(sq.Dollar).Where(sq.Eq{idColumn: id})
 
