@@ -16,10 +16,10 @@ const (
 	usernamesChatColumn = "usernames"
 
 	tableMsgName    = "message"
-	fromColumn      = "from"
-	toColumn        = "to"
+	fromUserColumn  = "from_user"
 	timestampColumn = "timestamp"
 	textColumn      = "text"
+	chatIdColumn    = "chat_id"
 )
 
 type repo struct {
@@ -35,8 +35,8 @@ func (r repo) SendMessage(ctx context.Context, message *model.CreateMessage) err
 
 	builder := sq.Insert(tableMsgName).
 		PlaceholderFormat(sq.Dollar).
-		Columns(fromColumn, toColumn, timestampColumn, textColumn).
-		Values(message.From, message.To, message.Timestamp, message.Text).
+		Columns(chatIdColumn, fromUserColumn, timestampColumn, textColumn).
+		Values(message.ChatID, message.From, message.Timestamp, message.Text).
 		Suffix("RETURNING id")
 
 	query, args, err := builder.ToSql()
