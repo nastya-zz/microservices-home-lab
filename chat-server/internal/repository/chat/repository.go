@@ -60,6 +60,33 @@ func (r repo) SendMessage(ctx context.Context, message *model.CreateMessage) err
 	return nil
 }
 
+func (r repo) ListMessages(ctx context.Context, chatId int64) ([]*model.Message, error) {
+	const op = "chat.ListMessages"
+	builder := sq.Select(chatIdColumn, fromUserColumn, timestampColumn, textColumn).
+		From(tableMsgName).
+		Where(sq.Eq{chatIdColumn: chatId})
+
+	query, args, err := builder.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	q := db.Query{
+		Name:     op,
+		QueryRaw: query,
+	}
+
+	var messages []*model.Message
+	err = r.db.DB().QueryRowContext(ctx, q, args...).Scan(&messages)
+	if err != nil {
+		log.Println(err)
+		return nil, fmt.Errorf("error in list msgs %w, %d", err, chatId)
+	}
+
+	log.Println("id:", chatId)
+	return messages, nil
+}
+
 func (r repo) Create(ctx context.Context, chat *model.CreateChat) (int64, error) {
 	const op = "chat.Create"
 
