@@ -36,7 +36,7 @@ func NewRepository(db db.Client) repository.AuthRepository {
 }
 
 func (r repo) Get(ctx context.Context, id int64) (*model.User, error) {
-	const op = "chat.Get"
+	const op = "auth.Get"
 
 	builder := sq.Select(idColumn, nameColumn, emailColumn, roleColumn, createdAtColumn, updatedAtColumn).
 		PlaceholderFormat(sq.Dollar).
@@ -65,7 +65,7 @@ func (r repo) Get(ctx context.Context, id int64) (*model.User, error) {
 }
 
 func (r repo) Create(ctx context.Context, user *model.CreateUser) (int64, error) {
-	const op = "chat.Create"
+	const op = "auth.Create"
 
 	builder := sq.Insert(tableName).
 		PlaceholderFormat(sq.Dollar).
@@ -95,7 +95,7 @@ func (r repo) Create(ctx context.Context, user *model.CreateUser) (int64, error)
 }
 
 func (r repo) Update(ctx context.Context, updateUser *model.UpdateUser) error {
-	const op = "chat.Update"
+	const op = "auth.Update"
 	log.Printf("updating user %+v", updateUser)
 
 	builder := sq.Update(tableName).
@@ -137,7 +137,7 @@ func (r repo) Update(ctx context.Context, updateUser *model.UpdateUser) error {
 }
 
 func (r repo) Delete(ctx context.Context, id int64) error {
-	const op = "chat.Delete"
+	const op = "auth.Delete"
 
 	builder := sq.Delete(tableName).PlaceholderFormat(sq.Dollar).Where(sq.Eq{idColumn: id})
 
@@ -157,4 +157,33 @@ func (r repo) Delete(ctx context.Context, id int64) error {
 	}
 
 	return nil
+}
+
+func (r repo) Login(ctx context.Context, email string) (*model.User, error) {
+	const op = "auth.Login"
+
+	builder := sq.Select(idColumn, nameColumn, roleColumn, passwordColumn).
+		PlaceholderFormat(sq.Dollar).
+		From(tableName).
+		Where(sq.Eq{emailColumn: email}).
+		Limit(1)
+	query, args, err := builder.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	q := db.Query{
+		Name:     op,
+		QueryRaw: query,
+	}
+
+	var user modelRepo.User
+	err = r.db.DB().QueryRowContext(ctx, q, args...).Scan(&user.ID, &user.Name, &user.Role, &user.Password)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, fmt.Errorf("cannot get user with email: %s", email)
+		}
+	}
+
+	return converter.ToUserFromRepo(&user), nil
 }

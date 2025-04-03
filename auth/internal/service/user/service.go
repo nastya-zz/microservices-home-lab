@@ -1,11 +1,9 @@
-package auth
+package user
 
 import (
 	"auth/internal/client/db"
-	"auth/internal/model"
 	"auth/internal/repository"
 	"auth/internal/service"
-	"context"
 )
 
 type serv struct {
@@ -13,18 +11,10 @@ type serv struct {
 	txManager      db.TxManager
 }
 
-func (s serv) GetAccessToken(ctx context.Context, claims *model.UserClaims) (string, error) {
-	return "", nil
-}
-
-func (s serv) GetRefreshToken(ctx context.Context, claims *model.UserClaims) (string, error) {
-	return "", nil
-}
-
 func NewService(
 	authRepository repository.AuthRepository,
 	txManager db.TxManager,
-) service.AuthService {
+) service.UserService {
 	return &serv{
 		authRepository: authRepository,
 		txManager:      txManager,

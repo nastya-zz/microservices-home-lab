@@ -2,11 +2,11 @@ package auth
 
 import (
 	"auth/internal/service"
-	desc "auth/pkg/user_v1"
+	desc "auth/pkg/auth_v1"
 )
 
 type Implementation struct {
-	desc.UnimplementedUserV1Server
+	desc.UnimplementedAuthV1Server
 	authService service.AuthService
 }
 

@@ -2,6 +2,7 @@ package app
 
 import (
 	"auth/internal/api/auth"
+	"auth/internal/api/user"
 	"auth/internal/client/db"
 	"auth/internal/client/db/pg"
 	"auth/internal/closer"
@@ -10,6 +11,7 @@ import (
 	authRepository "auth/internal/repository/auth"
 	"auth/internal/service"
 	authService "auth/internal/service/auth"
+	userService "auth/internal/service/user"
 	"auth/internal/transaction"
 	"context"
 	"log"
@@ -24,7 +26,9 @@ type serviceProvider struct {
 	authRepository repository.AuthRepository
 
 	authService service.AuthService
+	userService service.UserService
 
+	userImpl *user.Implementation
 	authImpl *auth.Implementation
 }
 
@@ -104,10 +108,29 @@ func (s *serviceProvider) AuthService(ctx context.Context) service.AuthService {
 	return s.authService
 }
 
+func (s *serviceProvider) UserService(ctx context.Context) service.UserService {
+	if s.userService == nil {
+		s.userService = userService.NewService(
+			s.AuthRepository(ctx),
+			s.TxManager(ctx),
+		)
+	}
+
+	return s.userService
+}
+
 func (s *serviceProvider) AuthImpl(ctx context.Context) *auth.Implementation {
+
 	if s.authImpl == nil {
 		s.authImpl = auth.NewImplementation(s.AuthService(ctx))
 	}
 
 	return s.authImpl
+}
+func (s *serviceProvider) UserImpl(ctx context.Context) *user.Implementation {
+	if s.authImpl == nil {
+		s.authImpl = auth.NewImplementation(s.AuthService(ctx))
+	}
+
+	return s.userImpl
 }

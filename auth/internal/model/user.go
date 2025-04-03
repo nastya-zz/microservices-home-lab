@@ -23,7 +23,7 @@ type CreateUser struct {
 }
 
 type UpdateUser struct {
+	ID    int64
 	Name  string
 	Email string
-	ID    int64
 }

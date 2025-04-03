@@ -1,28 +1,13 @@
 package model
 
-import (
-	"database/sql"
-	"time"
+import "github.com/dgrijalva/jwt-go"
+
+const (
+	ExamplePath = "/user-v1.UserV1/Get"
 )
 
-type User struct {
-	ID        int64
-	Name      string
-	Email     string
-	Role      string
-	CreatedAt time.Time
-	UpdatedAt sql.NullTime
-}
-
-type CreateUser struct {
-	Name     string
-	Email    string
-	Role     string
-	Password string
-}
-
-type UpdateUser struct {
-	ID    int64
-	Name  string
-	Email string
+type UserClaims struct {
+	jwt.StandardClaims
+	Name string `json:"name"`
+	Role string `json:"role"`
 }

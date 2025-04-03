@@ -9,6 +9,7 @@ func ToUserFromRepo(user *modelRepo.User) *model.User {
 		Email:     user.Email,
 		Name:      user.Name,
 		Role:      user.Role,
+		Password:  user.Password,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}
