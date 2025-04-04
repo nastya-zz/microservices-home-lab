@@ -17,5 +17,10 @@ func (i *Implementation) GetAccessToken(ctx context.Context, req *desc.GetAccess
 
 	log.Printf("Claims %+v", claims)
 
-	return nil, status.Errorf(codes.Unimplemented, "method GetAccessToken not implemented")
+	accessToken, err := i.authService.GetAccessToken(ctx, claims)
+	if err != nil {
+		return nil, status.Errorf(codes.PermissionDenied, "failed to get access token")
+	}
+
+	return &desc.GetAccessTokenResponse{AccessToken: accessToken}, nil
 }

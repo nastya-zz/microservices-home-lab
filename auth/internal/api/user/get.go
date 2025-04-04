@@ -18,7 +18,7 @@ func (s *Implementation) Get(ctx context.Context, req *desc.GetRequest) (*desc.G
 			"user id is required")
 	}
 
-	user, err := s.authService.Get(ctx, req.GetId())
+	user, err := s.userService.Get(ctx, req.GetId())
 	if err != nil {
 		return nil, status.Errorf(
 			codes.Internal,

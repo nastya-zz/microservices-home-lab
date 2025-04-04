@@ -21,7 +21,7 @@ func (s *Implementation) Update(ctx context.Context, req *desc.UpdateRequest) (*
 			strings.Join(errors, ","))
 	}
 
-	err := s.authService.Update(ctx, converter.ToUpdateUserFromDesc(req.GetUserInfo()))
+	err := s.userService.Update(ctx, converter.ToUpdateUserFromDesc(req.GetUserInfo()))
 	if err != nil {
 		return nil, status.Errorf(
 			codes.NotFound,

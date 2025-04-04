@@ -17,3 +17,7 @@ type AuthService interface {
 	GetAccessToken(ctx context.Context, claims *model.UserClaims) (string, error)
 	GetRefreshToken(ctx context.Context, claims *model.UserClaims) (string, error)
 }
+
+type AccessService interface {
+	Check(ctx context.Context, url string, claims *model.UserClaims) (bool, error)
+}

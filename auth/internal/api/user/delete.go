@@ -18,7 +18,7 @@ func (s *Implementation) Delete(ctx context.Context, req *desc.DeleteRequest) (*
 			"user id is required")
 	}
 
-	if err := s.authService.Delete(ctx, req.GetId()); err != nil {
+	if err := s.userService.Delete(ctx, req.GetId()); err != nil {
 		return nil, err
 	}
 

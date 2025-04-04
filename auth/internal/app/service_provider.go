@@ -1,6 +1,7 @@
 package app
 
 import (
+	"auth/internal/api/access"
 	"auth/internal/api/auth"
 	"auth/internal/api/user"
 	"auth/internal/client/db"
@@ -10,6 +11,7 @@ import (
 	"auth/internal/repository"
 	authRepository "auth/internal/repository/auth"
 	"auth/internal/service"
+	accessService "auth/internal/service/access"
 	authService "auth/internal/service/auth"
 	userService "auth/internal/service/user"
 	"auth/internal/transaction"
@@ -25,11 +27,13 @@ type serviceProvider struct {
 	txManager      db.TxManager
 	authRepository repository.AuthRepository
 
-	authService service.AuthService
-	userService service.UserService
+	authService   service.AuthService
+	userService   service.UserService
+	accessService service.AccessService
 
-	userImpl *user.Implementation
-	authImpl *auth.Implementation
+	userImpl   *user.Implementation
+	authImpl   *auth.Implementation
+	accessImpl *access.Implementation
 }
 
 func newServiceProvider() *serviceProvider {
@@ -108,6 +112,16 @@ func (s *serviceProvider) AuthService(ctx context.Context) service.AuthService {
 	return s.authService
 }
 
+func (s *serviceProvider) AccessService(ctx context.Context) service.AccessService {
+	if s.accessService == nil {
+		s.accessService = accessService.NewService(
+			s.AuthRepository(ctx),
+		)
+	}
+
+	return s.accessService
+}
+
 func (s *serviceProvider) UserService(ctx context.Context) service.UserService {
 	if s.userService == nil {
 		s.userService = userService.NewService(
@@ -127,9 +141,17 @@ func (s *serviceProvider) AuthImpl(ctx context.Context) *auth.Implementation {
 
 	return s.authImpl
 }
+func (s *serviceProvider) AccessImpl(ctx context.Context) *access.Implementation {
+
+	if s.accessImpl == nil {
+		s.accessImpl = access.NewImplementation(s.AccessService(ctx))
+	}
+
+	return s.accessImpl
+}
 func (s *serviceProvider) UserImpl(ctx context.Context) *user.Implementation {
-	if s.authImpl == nil {
-		s.authImpl = auth.NewImplementation(s.AuthService(ctx))
+	if s.userImpl == nil {
+		s.userImpl = user.NewImplementation(s.UserService(ctx))
 	}
 
 	return s.userImpl

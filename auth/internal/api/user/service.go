@@ -7,11 +7,11 @@ import (
 
 type Implementation struct {
 	desc.UnimplementedUserV1Server
-	authService service.UserService
+	userService service.UserService
 }
 
-func NewImplementation(authService service.UserService) *Implementation {
+func NewImplementation(userService service.UserService) *Implementation {
 	return &Implementation{
-		authService: authService,
+		userService: userService,
 	}
 }

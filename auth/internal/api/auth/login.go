@@ -12,9 +12,13 @@ func (i *Implementation) Login(ctx context.Context, req *desc.LoginRequest) (*de
 	email := req.GetLogin()
 	password := req.GetPassword()
 
+	if email == "" || password == "" {
+		return nil, status.Error(codes.InvalidArgument, "login or password is empty")
+	}
+
 	token, err := i.authService.Login(ctx, email, password)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "method Login")
+		return nil, status.Errorf(codes.PermissionDenied, "user not found")
 	}
 
 	return &desc.LoginResponse{

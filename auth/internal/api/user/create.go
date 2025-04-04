@@ -21,7 +21,7 @@ func (s *Implementation) Create(ctx context.Context, req *desc.CreateRequest) (*
 	}
 	preparedUser := converter.ToCreateUserFromDesc(req.GetUser())
 
-	id, err := s.authService.Create(ctx, preparedUser)
+	id, err := s.userService.Create(ctx, preparedUser)
 
 	log.Printf("Created user with id %d", id)
 
