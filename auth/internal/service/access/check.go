@@ -4,7 +4,6 @@ import (
 	"auth/internal/model"
 	"context"
 	"fmt"
-	"log"
 )
 
 func (s serv) Check(ctx context.Context, url string, claims *model.UserClaims) (bool, error) {
@@ -12,10 +11,8 @@ func (s serv) Check(ctx context.Context, url string, claims *model.UserClaims) (
 	if err != nil {
 		return false, fmt.Errorf("failed to get accessible roles")
 	}
-	log.Println(claims.Role)
 
 	accessRole, ok := accessibleMap[url]
-	log.Println(accessibleMap, url)
 
 	if !ok {
 		return false, nil
@@ -24,8 +21,6 @@ func (s serv) Check(ctx context.Context, url string, claims *model.UserClaims) (
 	if accessRole == claims.Role {
 		return true, nil
 	}
-
-	log.Println(accessRole, claims.Role)
 
 	return false, fmt.Errorf("access denied")
 }
