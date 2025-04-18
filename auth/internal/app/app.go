@@ -3,9 +3,7 @@ package app
 import (
 	"auth/internal/closer"
 	"auth/internal/config"
-	descAccess "auth/pkg/access_v1"
 	descAuth "auth/pkg/auth_v1"
-	desc "auth/pkg/user_v1"
 	"context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -75,9 +73,7 @@ func (a *App) initGRPCServer(ctx context.Context) error {
 
 	reflection.Register(a.grpcServer)
 
-	desc.RegisterUserV1Server(a.grpcServer, a.serviceProvider.UserImpl(ctx))
 	descAuth.RegisterAuthV1Server(a.grpcServer, a.serviceProvider.AuthImpl(ctx))
-	descAccess.RegisterAccessV1Server(a.grpcServer, a.serviceProvider.AccessImpl(ctx))
 
 	return nil
 }
